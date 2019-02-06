@@ -1,0 +1,26 @@
+{% extends "./base.html" %}
+{% load materializecss %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Picture Editor</title>
+</head>
+<body>
+{% block content %}
+    <h1 class="btn z-depth-0 grey" style="margin-bottom: 60px;">Edit And Share Your Pictures!!</h1>
+    <div class="row">
+        <form class="col s12" method="POST" enctype='multipart/form-data'>
+            {% csrf_token %}
+            {{ form | materializecss }}
+            <input type="submit" class="btn" style="margin-top: 10px" value="Create">
+        </form>
+    </div>
+{% endblock %}
+
+</body>
+<style>
+
+</style>
+</html>
