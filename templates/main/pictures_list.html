@@ -1,49 +1,62 @@
 {% extends "../base.html" %}
-{#{% load static %}#}
+
 {% block content %}
     <h1 class="btn z-depth-0 grey">Pictures</h1>
     <div class="row">
-        {% for object in object_list %}
-            <div class="col s3">
-                <div class="card">
-                    <div class="card-image">
-                        <img class="materialboxed responsive-img" width="650"
-                             src="http://{{ request.get_host }}{{ object.picture.url }}"
-                             data-caption="Shared by {{ object.full_name }}" style="height: 250px">
-                    </div>
-                    <div class="card-content">
-                        <p>Shared by: {{ object.full_name }}</p>
-                    </div>
-                    {% if user.is_superuser %}
-                        {% if object.confirmed_by_admin %}
-                            <div class="card-action">
-                                <a target="_blank"
-                                   class="btn red btn-block"
-                                   href="{% url "main:disconfirm_photo" object %}">
-                                    Disconfirm
-                                </a>
-                            </div>
-                        {% else %}
-                            <div class="card-action">
-                                <a href="#" id="confirm" class="btn green btn-block">Confirm</a>
-                            </div>
-                        {% endif %}
-                    {% endif %}
+        {% if user.is_superuser %}
+            {% for session in sessions %}
+                <div class="col s12">
+                    <ul class="collection">
+                        <li class="collection-item indigo-text">Session Key: {{ session.session_key }}</li>
+                    </ul>
                 </div>
-            </div>
-        {% endfor %}
-        {#        <script type="text/javascript" src="{% static "js/jquery-3.3.1.min.js" %}"></script>#}
-        {#        <script>#}
-        {#            $(document).ready(function () {#}
-        {#                $("#disconfirm").click(function () {#}
-        {#                    console.log("Handler for .click() called.");#}
-        {#                });#}
-        {#            });#}
-        {##}
-        {##}
-        {#            $("#confirm").click(function () {#}
-        {#                alert("Handler for .click() called.");#}
-        {#            });#}
-        {#        </script>#}
+                {% for object in object_list %}
+                    {% if session.session_key == object.session_key.session_key %}
+                        <div class="col s3">
+                            <div class="card">
+                                <div class="card-image">
+                                    <img class="materialboxed responsive-img" width="650"
+                                         src="http://{{ request.get_host }}{{ object.picture.url }}"
+                                         data-caption="Shared by {{ object.full_name }}" style="height: 250px">
+                                </div>
+                                <div class="card-content">
+                                    <p>Shared by: {{ object.full_name }}</p>
+                                </div>
+                                {% if object.confirmed_by_admin %}
+                                    <div class="card-action">
+                                        <a class="btn red btn-block"
+                                           href="{% url "main:disconfirm_photo" object.id %}">
+                                            Disconfirm
+                                        </a>
+                                    </div>
+                                {% else %}
+                                    <div class="card-action">
+                                        <a class="btn green btn-block"
+                                           href="{% url "main:confirm_photo" object.id %}">
+                                            Confirm
+                                        </a>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+        {% else %}
+            {% for object in object_list %}
+                <div class="col s3">
+                    <div class="card">
+                        <div class="card-image">
+                            <img class="materialboxed responsive-img" width="650"
+                                 src="http://{{ request.get_host }}{{ object.picture.url }}"
+                                 data-caption="Shared by {{ object.full_name }}" style="height: 250px">
+                        </div>
+                        <div class="card-content">
+                            <p>Shared by: {{ object.full_name }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
     </div>
 {% endblock %}

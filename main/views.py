@@ -1,11 +1,12 @@
 from django.core.exceptions import ValidationError
 from django.shortcuts import redirect
+from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView
-from .models import Pictures
+from .models import Pictures, SessionKeys
 from .forms import PicturesModelForm
 from PIL import Image, ImageOps
 from mimetypes import guess_type
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import user_passes_test
 
 
@@ -17,23 +18,17 @@ class PicturesCreateView(CreateView):
     template_name = "main/pictures_create.html"
     success_url = '/pictures'
 
-    # TODO add download feature
-    @staticmethod
-    def download_photo(file_path):
-        print(file_path)
-        with open(file_path, 'rb') as f:
-            response = HttpResponse(f, content_type=guess_type(file_path)[0])
-            response['Content-Length'] = len(response.content)
-            print(response)
-            return response
-
     def form_valid(self, form):
         picture_object = form.save(commit=True)
         form_data = form.cleaned_data
-        # picture_id = picture_object.id
         if not self.request.session.session_key:
             self.request.session.save()
-        picture_object.session_key = self.request.session.session_key
+        session_key = self.request.session.session_key
+        if SessionKeys.objects.filter(session_key=session_key).exists():
+            session_key_object = SessionKeys.objects.get(session_key=session_key)
+        else:
+            session_key_object = SessionKeys.objects.create(session_key=session_key)
+        picture_object.session_key = session_key_object
         picture_object.save()
         cleaned_picture = form_data.get('picture')
         cleaned_rotations_degree = form_data.get('rotations_degree')
@@ -68,7 +63,9 @@ class PicturesCreateView(CreateView):
                 except OSError:
                     raise ValidationError("Re-upload the file")
             # self.download_photo(picture_object.picture.url)
-        return redirect(self.success_url)
+        if picture_object.confirmed_by_user:
+            return redirect(self.success_url)
+        return HttpResponseRedirect("{picture_path}".format(picture_path=picture_object.picture.url))
 
 
 class PicturesListView(ListView):
@@ -81,24 +78,39 @@ class PicturesListView(ListView):
             queryset = Pictures.objects.filter(confirmed_by_user=True, confirmed_by_admin=True)
         return queryset
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.user.is_superuser:
+            sessions = SessionKeys.objects.all()
+            needed_sessions = list()
+            for session in sessions:
+                if Pictures.objects.filter(session_key=session, confirmed_by_user=True).exists():
+                    needed_sessions.append(session)
+            context['sessions'] = needed_sessions
+        return context
+
 
 @user_passes_test(lambda user: user.is_superuser)
 def disconfirm_photo(request, id):
-    if request.method is "GET":
+    print(request.method)
+    if request.method == "GET":
+        print('ima here')
         picture_object = Pictures.objects.get(id=id)
         picture_object.confirmed_by_admin = False
         picture_object.save()
         return redirect("main:pictures")
     else:
-        print("False request sent")
+        print("False request was sent!")
+        return redirect("main:pictures")
 
 
 @user_passes_test(lambda user: user.is_superuser)
 def confirm_photo(request, id):
-    if request.method is "GET":
+    if request.method == "GET":
         picture_object = Pictures.objects.get(id=id)
         picture_object.confirmed_by_admin = True
         picture_object.save()
         return redirect("main:pictures")
     else:
-        print("False request sent")
+        print("False request was sent!")
+        return redirect("main:pictures")

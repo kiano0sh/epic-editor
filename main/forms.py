@@ -37,7 +37,7 @@ class PicturesModelForm(forms.ModelForm):
         help_texts = {
             'crop_amount': "The amount of pixels that are going to remove from all four sides of picture",
             'picture_size': "Exp: 200x200",
-            'rotations_degree': "From 0 to 360 are allowed"
+            'rotations_degree': "From -360 to 360 are allowed"
         }
 
     def clean_picture_size(self):
