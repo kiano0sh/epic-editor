@@ -1,0 +1,34 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Epic Editor</title>
+    <link type="text/css" rel="stylesheet" href="{% static "css/materialize.min.css" %}" media="screen,projection"/>
+</head>
+<body>
+<nav class="nav-wrapper blue-grey darken-2">
+    <div class="container">
+        <a href="/" class="brand-logo left">Epic Editor</a>
+        <ul>
+            <li class="right"><a href="{% url 'main:pictures' %}">Pictures</a></li>
+            <li class="right"><a href="{% url 'main:add_picture' %}">Edit & Add Pictures</a></li>
+            {% if user.is_superuser %}
+                <li class="right"><a href="{% url 'account:logout' %}">Logout</a></li>
+            {% else %}
+                <li class="right"><a href="{% url 'account:login' %}">Login</a></li>
+            {% endif %}
+        </ul>
+    </div>
+</nav>
+<div class="container">
+    {% block content %}
+    {% endblock %}
+</div>
+<script type="text/javascript" src="{% static "js/materialize.min.js" %}"></script>
+<script>
+    M.AutoInit();
+</script>
+</body>
+</html>

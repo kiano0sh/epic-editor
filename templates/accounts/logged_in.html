@@ -1,0 +1,15 @@
+{% extends "../base.html" %}
+
+{% block content %}
+    <div class="container">
+        <h4>You have successfully logged in as the {% if user.is_superuser %}
+            <span class="red-text">SUPERUSER!!</span>
+            <br>
+            Your username: {{ user.username }}
+        {% else %}
+            {{ user.username }}
+        {% endif %}</h4>
+        <h4>You can now choose what picture shown to others or not!! <a href="{% url "main:pictures" %}">Click here</a>
+        </h4>
+    </div>
+{% endblock %}

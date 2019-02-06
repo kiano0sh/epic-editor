@@ -3,6 +3,8 @@ import uuid
 from django.db import models
 from django.utils import timezone
 from django.core.validators import MaxValueValidator
+from mimetypes import guess_type
+from django.http import HttpResponse
 
 
 class Pictures(models.Model):
@@ -15,7 +17,7 @@ class Pictures(models.Model):
     full_name = models.CharField(max_length=30)
     rotations_degree = models.IntegerField(
         validators=[MaxValueValidator(360, message="The max rotation degree is '360'")], null=True, blank=True)
-    picture_size = models.CharField(max_length=13, null=True, blank=True)
+    picture_size = models.CharField(max_length=9, null=True, blank=True)
     mode_l = models.BooleanField(default=False)
     crop_amount = models.IntegerField(null=True, blank=True)
     confirmed_by_user = models.BooleanField(default=False)

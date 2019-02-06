@@ -1,14 +1,9 @@
 /main/migrations/
 /main/__pycache__/
-.idea/dataSources.local.xml
-.idea/dataSources.xml
-.idea/dataSources/
-.idea/encodings.xml
-.idea/epic.iml
-.idea/misc.xml
-.idea/modules.xml
-.idea/workspace.xml
 __pycache__/
 db.sqlite3
 venv/
 /media/
+.idea
+/accounts/migrations/
+/epic/static/

@@ -1,11 +1,49 @@
-{% extends "./base.html" %}
-
+{% extends "../base.html" %}
+{#{% load static %}#}
 {% block content %}
-    <h1 class="btn z-depth-0 grey">Students</h1>
-    {% for object in object_list %}
-        <ul class="collection">
-            <li class="collection-item grey lighten-3">"{{ object.picture }}</li>
-            <li class="collection-item grey lighten-3">"{{ object.full_name }}</li>
-        </ul>
-    {% endfor %}
+    <h1 class="btn z-depth-0 grey">Pictures</h1>
+    <div class="row">
+        {% for object in object_list %}
+            <div class="col s3">
+                <div class="card">
+                    <div class="card-image">
+                        <img class="materialboxed responsive-img" width="650"
+                             src="http://{{ request.get_host }}{{ object.picture.url }}"
+                             data-caption="Shared by {{ object.full_name }}" style="height: 250px">
+                    </div>
+                    <div class="card-content">
+                        <p>Shared by: {{ object.full_name }}</p>
+                    </div>
+                    {% if user.is_superuser %}
+                        {% if object.confirmed_by_admin %}
+                            <div class="card-action">
+                                <a target="_blank"
+                                   class="btn red btn-block"
+                                   href="{% url "main:disconfirm_photo" object %}">
+                                    Disconfirm
+                                </a>
+                            </div>
+                        {% else %}
+                            <div class="card-action">
+                                <a href="#" id="confirm" class="btn green btn-block">Confirm</a>
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+        {#        <script type="text/javascript" src="{% static "js/jquery-3.3.1.min.js" %}"></script>#}
+        {#        <script>#}
+        {#            $(document).ready(function () {#}
+        {#                $("#disconfirm").click(function () {#}
+        {#                    console.log("Handler for .click() called.");#}
+        {#                });#}
+        {#            });#}
+        {##}
+        {##}
+        {#            $("#confirm").click(function () {#}
+        {#                alert("Handler for .click() called.");#}
+        {#            });#}
+        {#        </script>#}
+    </div>
 {% endblock %}

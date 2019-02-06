@@ -15,10 +15,20 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from .views import index
+from django.conf import settings
+from .views import index, LoggedIn, LoggedOut
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index, name='index'),
-    path('', include('main.urls', namespace='new_app')),
+    path('logged_in', LoggedIn.as_view(), name='logged_in'),
+    path('logged_out', LoggedOut.as_view(), name='logged_out'),
+    path('', include('main.urls', namespace='main')),
+    path('', include('accounts.urls', namespace='account')),
 ]
+
+if settings.DEBUG:
+    from django.conf.urls.static import static
+
+    urlpatterns += static(
+        settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
