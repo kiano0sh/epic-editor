@@ -41,3 +41,9 @@ Step 9: python manage.py runserver
 
 All Done!
 ```
+
+If you need to create a superuser (admin user) run the code below in the root directory of the project and enter the require information:
+
+```
+python manage.py createsuperuser
+```
