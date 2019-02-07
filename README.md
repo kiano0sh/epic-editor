@@ -12,7 +12,7 @@ django-materializecss-form==1.1.11
 **Installation guide:**
 
 ```
-Note: Assumed that your in the . directory.
+Note: Assumed that you're in the . directory.
 
 .
 └── epic_editor
