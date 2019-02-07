@@ -112,8 +112,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-SESSION_SAVE_EVERY_REQUEST = True
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))

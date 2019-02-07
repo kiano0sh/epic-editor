@@ -3,8 +3,6 @@ import uuid
 from django.db import models
 from django.utils import timezone
 from django.core.validators import MaxValueValidator, MinValueValidator
-from mimetypes import guess_type
-from django.http import HttpResponse
 
 
 class SessionKeys(models.Model):

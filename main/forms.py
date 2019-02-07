@@ -6,15 +6,6 @@ from .models import Pictures
 from PIL import Image
 
 
-# class UniversityModelForm(forms.ModelForm):
-#     class Meta:
-#         model = Pictures
-#         fields = [
-#             'name',
-#             'location'
-#         ]
-
-
 class PicturesModelForm(forms.ModelForm):
     class Meta:
         model = Pictures

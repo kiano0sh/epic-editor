@@ -1,16 +1,12 @@
 from django.core.exceptions import ValidationError
 from django.shortcuts import redirect
-from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView
 from .models import Pictures, SessionKeys
 from .forms import PicturesModelForm
 from PIL import Image, ImageOps
-from mimetypes import guess_type
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import user_passes_test
 
-
-# Create your views here.
 
 class PicturesCreateView(CreateView):
     queryset = Pictures.objects.all()
@@ -62,7 +58,6 @@ class PicturesCreateView(CreateView):
                     save_pic(ImageOps.crop(open_pic(), cleaned_crop_amount))
                 except OSError:
                     raise ValidationError("Re-upload the file")
-            # self.download_photo(picture_object.picture.url)
         if picture_object.confirmed_by_user:
             return redirect(self.success_url)
         return HttpResponseRedirect("{picture_path}".format(picture_path=picture_object.picture.url))
@@ -92,9 +87,7 @@ class PicturesListView(ListView):
 
 @user_passes_test(lambda user: user.is_superuser)
 def disconfirm_photo(request, id):
-    print(request.method)
     if request.method == "GET":
-        print('ima here')
         picture_object = Pictures.objects.get(id=id)
         picture_object.confirmed_by_admin = False
         picture_object.save()
