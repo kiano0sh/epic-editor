@@ -26,13 +26,13 @@ Note: Assumed that you're in the . directory.
 
 
 Step 1: pip install virtualenv
-Step 2: python -m venv venv
-Step 3: 
+Step 2: cd epic_editor
+Step 3: python -m venv venv
+Step 4:
 Windows:
 venv\Scripts\activate
 Linux:
 source ./venv/bin/activate
-Step 4: cd epic_editor
 Step 5: pip install -r requirements.txt
 Step 6: python manage.py migrate
 Step 7: python manage.py makemigrations main
