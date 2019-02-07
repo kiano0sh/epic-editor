@@ -32,8 +32,8 @@ Windows:
 venv\Scripts\activate
 Linux:
 source ./venv/bin/activate
-Step 4: pip install -r epic_editor/requirements
-Step 5: cd epic_editor
+Step 4: cd epic_editor
+Step 5: pip install -r epic_editor/requirements.txt
 Step 6: python manage.py migrate
 Step 7: python manage.py makemigrations main
 Step 8: python manage.py migrate
